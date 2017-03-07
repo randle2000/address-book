@@ -65,3 +65,4 @@ OAuth2 with social networks:
 	https://www.petrikainulainen.net/spring-social-tutorial/
 	https://spring.io/guides/tutorials/spring-boot-oauth2/
 
+mvn clean heroku:deploy
