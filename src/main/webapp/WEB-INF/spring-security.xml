@@ -24,14 +24,18 @@
 		<access-denied-handler error-page="/403" />
 		<!-- login-processing-url is the URL that Spring will intercept. 
 			your login form should POST to it. The default value is "/j_spring_security_check"
-			see http://docs.spring.io/spring-security/site/docs/3.2.3.RELEASE/reference/htmlsingle/#remember-me -->
+			see http://docs.spring.io/spring-security/site/docs/3.2.3.RELEASE/reference/htmlsingle/#remember-me 
+			login-page - Custom login page url path
+			default-target-url - url where the user should navigate after successful login
+			authentication-failure-url - url where the user should navigate after a login failure
+			username-parameter and password-parameter - These two are optional.
+				By default spring-security accepts the parameter names “j_username” and “j_password”
+				as username and password in the login form.
+		--> 
 		<form-login 
-		    login-page="/login" 	<!-- Custom login page url path -->
-		    default-target-url="/welcome" 	<!-- url where the user should navigate after successful login -->
-			authentication-failure-url="/login?error" <!-- url where the user should navigate after a login failure -->
-			<!-- username-parameter and password-parameter - These two are optional.
-			By default spring-security accepts the parameter names “j_username” and “j_password”
-			as username and password in the login form. -->
+		    login-page="/login" 
+		    default-target-url="/welcome"
+			authentication-failure-url="/login?error"
 			username-parameter="email"
 			password-parameter="pwd" 
 			login-processing-url="/auth/login_check"
