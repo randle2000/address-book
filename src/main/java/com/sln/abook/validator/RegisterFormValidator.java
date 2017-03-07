@@ -19,6 +19,10 @@ public class RegisterFormValidator implements Validator {
 	EmailValidator emailValidator;
 	
 	@Autowired
+	@Qualifier("passwordValidator")
+	PasswordValidator passwordValidator;
+	
+	@Autowired
 	UserService userService;
 	
 	@Override
@@ -43,6 +47,11 @@ public class RegisterFormValidator implements Validator {
 		if (!user.getPassword().equals(user.getConfirmPassword())) {
 			errors.rejectValue("confirmPassword", "Diff.registerForm.confirmPassword");
 		}
+
+		if(!passwordValidator.valid(user.getPassword())){
+			errors.rejectValue("password", "Pattern.registerForm.password");
+		}
+		
 	}
 
 }
