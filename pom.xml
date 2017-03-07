@@ -59,19 +59,21 @@
 		</dependency>
 
 		<!-- Spring Security -->
+		<!-- The core module contains core authentication and and access control components. -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
 			<version>${spring.security.version}</version>
 		</dependency>
-
-		<dependency>
+		<!-- The config module contains the code used to parse XML configuration files using the Spring Security XML namespace. -->
+		<dependency>	
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
 			<version>${spring.security.version}</version>
 		</dependency>
 
 		<!-- Spring Security JSP Taglib - ->
+		<!- - The taglibs module contains the Spring Security JPS tag libraries. - ->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-taglibs</artifactId>
@@ -86,7 +88,6 @@
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>${jcl.slf4j.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
@@ -119,7 +120,9 @@
 
 
 	<build>
+		<!-- finalName represents war file name -->
 		<finalName>address-book</finalName>
+		
 		<plugins>
 			<!-- Set JDK Compiler Level -->
 			<plugin>

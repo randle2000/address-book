@@ -59,3 +59,9 @@ For file upload see: http://www.journaldev.com/2573/spring-mvc-file-upload-examp
     Resizing images: http://www.codejava.net/java-se/graphics/how-to-resize-images-in-java  
 	
 contacts/index.jsp uses post() from my.js to post 
+
+OAuth2 with social networks:
+	http://callistaenterprise.se/blogg/teknik/2014/09/02/adding-social-login-to-a-website-using-spring-social/
+	https://www.petrikainulainen.net/spring-social-tutorial/
+	https://spring.io/guides/tutorials/spring-boot-oauth2/
+

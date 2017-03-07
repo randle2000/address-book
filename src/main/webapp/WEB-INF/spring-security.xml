@@ -9,6 +9,8 @@
 	http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context.xsd">
 	
+	<context:component-scan base-package="com.sln.abook.*" /> 
+
     <!-- enable use-expressions -->
 	<http auto-config="true" use-expressions="true">
 		<intercept-url pattern="/contacts/**" access="hasRole('ROLE_USER')" />
@@ -24,9 +26,12 @@
 			your login form should POST to it. The default value is "/j_spring_security_check"
 			see http://docs.spring.io/spring-security/site/docs/3.2.3.RELEASE/reference/htmlsingle/#remember-me -->
 		<form-login 
-		    login-page="/login" 
-		    default-target-url="/welcome" 
-			authentication-failure-url="/login?error" 
+		    login-page="/login" 	<!-- Custom login page url path -->
+		    default-target-url="/welcome" 	<!-- url where the user should navigate after successful login -->
+			authentication-failure-url="/login?error" <!-- url where the user should navigate after a login failure -->
+			<!-- username-parameter and password-parameter - These two are optional.
+			By default spring-security accepts the parameter names “j_username” and “j_password”
+			as username and password in the login form. -->
 			username-parameter="email"
 			password-parameter="pwd" 
 			login-processing-url="/auth/login_check"
@@ -70,6 +75,4 @@
 	</authentication-manager>
 	-->
 	
-	<context:component-scan base-package="com.sln.abook.*" /> 
-
 </beans:beans>
