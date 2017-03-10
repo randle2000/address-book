@@ -1,0 +1,15 @@
+# facebook provider details
+facebook.api.key=
+facebook.api.secret=
+
+# twitter provider details
+twitter.api.key=
+twitter.api.secret=
+
+# linkedin provider details
+linkedin.api.key=
+linkedin.api.secret=
+
+# google provider details
+google.api.key=
+google.api.secret=

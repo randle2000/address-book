@@ -2,3 +2,5 @@ target
 .classpath
 .project
 .settings/
+profiles/dev/database.properties
+profiles/dev/socialProviders.properties

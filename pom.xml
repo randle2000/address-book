@@ -14,7 +14,11 @@
 		<jdk.version>1.8</jdk.version>
 		<spring.version>4.1.6.RELEASE</spring.version>
 		<spring.security.version>3.2.3.RELEASE</spring.security.version>
-		<!-- <spring.security.version>4.2.2.RELEASE</spring.security.version>  -->
+        <spring.social.version>1.1.0.RELEASE</spring.social.version>
+        <spring.social.facebook.version>1.1.0.RELEASE</spring.social.facebook.version>
+        <spring.social.twitter.version>1.1.0.RELEASE</spring.social.twitter.version>
+        <spring.social.linkedin.version>1.0.0.RELEASE</spring.social.linkedin.version>
+        <spring.social.google.version>1.0.0.RELEASE</spring.social.google.version>
 		<logback.version>1.1.3</logback.version>
 		<jcl.slf4j.version>1.7.12</jcl.slf4j.version>
 		<jstl.version>1.2</jstl.version>
@@ -23,7 +27,7 @@
 	</properties>
 
 	<dependencies>
-		<!-- Spring Core -->
+	    <!-- spring dependencies -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
@@ -35,53 +39,92 @@
 			    </exclusion>
 			</exclusions>
 		</dependency>
-
-		<!-- Spring Web -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		
 		<!--  needed? 
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 			<version>${spring.version}</version>
+		</dependency>	-->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
 		</dependency>
-		-->
-
-		<!-- Spring JDBC -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
 
-		<!-- Spring Security -->
-		<!-- The core module contains core authentication and and access control components. -->
-		<dependency>
+        <!-- spring security dependencies -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${spring.security.version}</version>
+        </dependency>
+		<dependency>	<!-- The core module contains core authentication and and access control components. -->
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
 			<version>${spring.security.version}</version>
 		</dependency>
-		<!-- The config module contains the code used to parse XML configuration files using the Spring Security XML namespace. -->
-		<dependency>	
+		<dependency>	<!-- The config module contains the code used to parse XML configuration files using the Spring Security XML namespace. -->	
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
 			<version>${spring.security.version}</version>
 		</dependency>
-
-		<!-- Spring Security JSP Taglib - ->
-		<!- - The taglibs module contains the Spring Security JPS tag libraries. - ->
-		<dependency>
+		<!--
+		<dependency>	<!- - The taglibs module contains the Spring Security JPS tag libraries. - ->
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-taglibs</artifactId>
 			<version>${spring.security.version}</version>
-		</dependency>
-		 -->
-
-
+		</dependency>	-->
+		
+		<!-- Spring Social -->
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-config</artifactId>
+            <version>${spring.social.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-core</artifactId>
+            <version>${spring.social.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-security</artifactId>
+            <version>${spring.social.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-web</artifactId>
+            <version>${spring.social.version}</version>
+        </dependency>
+        <!-- Spring Social Facebook -->
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-facebook</artifactId>
+            <version>${spring.social.facebook.version}</version>
+        </dependency>
+        <!-- Spring Social Twitter -->
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-twitter</artifactId>
+            <version>${spring.social.twitter.version}</version>
+        </dependency>
+        <!-- Spring Social Linked In -->
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-linkedin</artifactId>
+            <version>${spring.social.linkedin.version}</version>
+        </dependency>
+        <!-- Spring Social google In -->
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-google</artifactId>
+            <version>${spring.social.google.version}</version>
+        </dependency>
+		 
 		<!-- logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -92,7 +135,7 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>${logback.version}</version>
-		</dependency>
+		</dependency>	
 
 		<!-- jstl -->
 		<dependency>
@@ -117,11 +160,31 @@
 
 	</dependencies>
 
-
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <build.profile.id>dev</build.profile.id>
+            </properties>
+        </profile>
+    </profiles>
 
 	<build>
 		<!-- finalName represents war file name -->
 		<finalName>address-book</finalName>
+        <filters>
+            <filter>profiles/${build.profile.id}/database.properties</filter>
+            <filter>profiles/${build.profile.id}/socialProviders.properties</filter>
+        </filters>
+        <resources>
+            <resource>
+                <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
 		
 		<plugins>
 			<!-- Set JDK Compiler Level -->
@@ -135,7 +198,7 @@
 				</configuration>
 			</plugin>
 			
-			<!-- Maven's plugin that will copy webapp-runner into target/dependency -->
+			<!-- Maven's plugin that will copy webapp-runner and tomcat-dbcp into target/dependency -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>

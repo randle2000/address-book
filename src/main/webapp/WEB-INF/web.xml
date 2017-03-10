@@ -4,22 +4,33 @@
 	      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	version="3.0">
 	
-	<display-name>address-book</display-name>
+	<display-name>Project Name</display-name>
 	
-	<!-- Spring MVC -->
-	<servlet>
-		<servlet-name>mvc-dispatcher</servlet-name>
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-		<init-param>
+    <!-- Location of Java @Configuration classes that configure the components that makeup this application -->
+	<context-param>
+    	<param-name>contextConfigLocation</param-name>
+    	<param-value>/WEB-INF/spring-config/root-context.xml</param-value>
+	</context-param>
+	
+	<!-- For root context. Creates the Spring Container shared by all Servlets and Filters -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <!-- Main Servlet -->
+    <servlet>
+        <servlet-name>appServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/mvc-dispatcher-servlet.xml</param-value>
+			<param-value></param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>mvc-dispatcher</servlet-name>
-		<url-pattern>/</url-pattern>
-	</servlet-mapping>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>appServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
 	
 	<!-- Enable Spring Security -->
 	<filter>
@@ -30,19 +41,6 @@
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
-	<!-- For root context -->
-	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
-
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>
-			/WEB-INF/spring-security.xml,
-			/WEB-INF/spring-database.xml
-		</param-value>
-	</context-param>
 
 	<session-config>
 		<session-timeout>30</session-timeout>
