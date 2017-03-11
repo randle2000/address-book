@@ -3,6 +3,7 @@
 
 <jsp:include page="includes/header.jsp" />
 
+
 <style>
 .error {
 	padding: 15px;
@@ -23,12 +24,17 @@
 	background-color: #d9edf7;
 	border-color: #bce8f1;
 }
+
+.bottom {
+	border-bottom: 5px solid #ccc;
+}
 </style>
 
 <body onload='document.loginForm.email.focus();'>
 
+
 <div class="jumbotron">
-  <div class="container">
+  <div class="container bottom">
 	<h2>
 	<img src="<c:url value='/resources/images/login-icon.gif' />" alt="LoginPic" style="width:70px;height:70px;">
 	Please login 
@@ -67,7 +73,33 @@
 		  </form>
 		</div>
 	</p>
-  </div>
+	</div>
+
+	<div class="container">
+	    <div class="col-sm-5 social-buttons">
+	      <h2>Or sign in via social account</h2>
+	      <a href="${pageContext.request.contextPath}/auth/twitter?scope=email,user_about_me,user_birthday" class="btn btn-block btn-social btn-twitter">
+	        <i class="fa fa-twitter"></i> Sign in with Twitter
+	      </a>
+		  
+	      <a href="${pageContext.request.contextPath}/auth/linkedin" class="btn btn-block btn-social btn-linkedin">
+	        <i class="fa fa-linkedin"></i> Sign in with LinkedIn
+	      </a>
+		  
+	      <a href="${pageContext.request.contextPath}/auth/facebook" class="btn btn-block btn-social btn-facebook">
+	        <i class="fa fa-facebook"></i> Sign in with Facebook
+	      </a>
+		  <!-- 
+		  <form name='GoogleSocialloginForm' action="${pageContext.request.contextPath}/auth/google" method='POST'>
+                		<button type="submit" class="btn btn-block btn-social btn-google">
+                			<i class="fa fa-google"></i> Sign in with Google
+                		</button>
+                	<input type="hidden" name="scope" value="https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo#email https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/tasks https://www-opensocial.googleusercontent.com/api/people https://www.googleapis.com/auth/plus.login" />
+        	</form>
+		   -->
+	    </div>
+	</div>    
+  
 </div>
 
 <jsp:include page="includes/footer.jsp" />

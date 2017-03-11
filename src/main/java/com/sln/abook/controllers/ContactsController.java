@@ -24,7 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.sln.abook.model.Contact;
 import com.sln.abook.model.User;
 import com.sln.abook.service.ContactService;
-import com.sln.abook.service.MyUserDetails;
+import com.sln.abook.service.MyUser;
 import com.sln.abook.validator.ContactFormValidator;
 
 @Controller
@@ -53,8 +53,8 @@ public class ContactsController {
 	 * Returns com.sln.model.User object of current authenticated user
 	 */
 	private User currentAuthenticatedUser() {
-		MyUserDetails myUserDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return myUserDetails.getUser();
+		MyUser myUser = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return myUser.getUser();
 	}
 	
 	private void populateDefaultModel(Model model) {

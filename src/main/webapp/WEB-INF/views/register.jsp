@@ -74,7 +74,7 @@
 					<label class="col-sm-2 control-label">Email</label>
 					<div class="col-sm-10">
 						<form:input path="email" class="form-control" id="email" placeholder="Email" readonly="${empty activeRegisterUpdate ? 'false' : 'true'}" />
-						<form:errors path="email" class="control-label" />
+						<form:errors path="email" class="control-label"  />
 					</div>
 				</div>
 			</spring:bind>

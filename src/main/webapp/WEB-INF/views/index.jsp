@@ -7,7 +7,6 @@
 <spring:url value="/contacts" var="urlContacts" />
 <spring:url value="/register" var="urlRegister" />
 
-
 <div class="jumbotron">
   <div class="container">
   	<!-- flash box from registerOrUpdateUser start -->

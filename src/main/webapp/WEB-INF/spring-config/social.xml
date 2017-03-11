@@ -1,0 +1,86 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/security
+                http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<!-- Spring Social config, 2 components are initiated in security.xml: socialAuthenticationFilter and socialAuthenticationProvider -->
+	
+	<!-- 
+		My beans that are used here:
+		com.sln.abook.service.UserServiceImpl - only its implementation of SocialUserDetailService interface
+		com.sln.abook.social.AppConnectionSignUp 
+		com.sln.abook.social.AppSocialAuthenticationServiceRegistry
+	 -->
+    <!-- If no local user is associated to a social connection then connection sign up will create a new local user and map it to social user -->
+    <bean id="connectionSignUp" class="com.sln.abook.social.AppConnectionSignUp"/>
+ 
+    <!-- service registry will holds connection factory of each social provider -->
+    <bean id="connectionFactoryLocator" class="com.sln.abook.social.AppSocialAuthenticationServiceRegistry">
+        <constructor-arg>
+            <list>
+                <ref bean="facebookAuthenticationService"/>
+                <ref bean="twitterAuthenticationService" />
+                <ref bean="linkedInAuthenticationService"/>
+                <ref bean="googleAuthenticationService"/>
+            </list>
+        </constructor-arg>
+    </bean>
+	
+    <!-- social login filter which is a pre authentication filter and works for /auth service url -->
+    <bean id="socialAuthenticationFilter" class="org.springframework.social.security.SocialAuthenticationFilter">
+        <constructor-arg name="authManager" ref="authenticationManager"/>
+        <constructor-arg name="userIdSource" ref="userIdSource"/>
+        <constructor-arg name="usersConnectionRepository" ref="usersConnectionRepository"/>
+        <constructor-arg name="authServiceLocator" ref="connectionFactoryLocator"/>
+    </bean>
+    <bean id="userIdSource" class="org.springframework.social.security.AuthenticationNameUserIdSource"/>
+
+    <!-- userService's implementation of SocialUserDetailService is used here -->
+    <bean id="socialAuthenticationProvider" class="org.springframework.social.security.SocialAuthenticationProvider">
+        <constructor-arg ref="usersConnectionRepository" />
+        <constructor-arg ref="userService" /> 
+    </bean>
+
+    <!-- inmemory connection repository which holds connection repository per local user - ->
+    <bean id="usersConnectionRepository" class="org.springframework.social.connect.mem.InMemoryUsersConnectionRepository">
+        <constructor-arg name="connectionFactoryLocator" ref="connectionFactoryLocator"/>
+        <property name="connectionSignUp" ref="connectionSignUp"/>
+    </bean> -->
+    <bean id="usersConnectionRepository" class="org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository">
+        <constructor-arg ref="dataSource" />
+    	<constructor-arg ref="connectionFactoryLocator" />
+    	<constructor-arg ref="textEncryptor" />
+        <property name="connectionSignUp" ref="connectionSignUp"/>
+    </bean>
+    <!--
+        This bean encrypts the authorization details of the connection. In
+        our example, the authorization details are stored as plain text.
+        DO NOT USE THIS IN PRODUCTION.
+    -->
+    <bean id="textEncryptor" class="org.springframework.security.crypto.encrypt.Encryptors" factory-method="noOpText" />	
+
+    <bean id="facebookAuthenticationService"
+          class="org.springframework.social.facebook.security.FacebookAuthenticationService">
+        <constructor-arg name="apiKey" value="${facebook.api.key}"/>
+        <constructor-arg name="appSecret" value="${facebook.api.secret}"/>
+    </bean>
+    <bean id="twitterAuthenticationService"
+          class="org.springframework.social.twitter.security.TwitterAuthenticationService">
+        <constructor-arg name="apiKey" value="${twitter.api.key}"/>
+        <constructor-arg name="appSecret" value="${twitter.api.secret}"/>
+    </bean>
+    <bean id="linkedInAuthenticationService"
+          class="org.springframework.social.linkedin.security.LinkedInAuthenticationService">
+        <constructor-arg name="apiKey" value="${linkedin.api.key}"/>
+        <constructor-arg name="appSecret" value="${linkedin.api.secret}"/>
+    </bean>
+    <bean id="googleAuthenticationService"
+          class="org.springframework.social.google.security.GoogleAuthenticationService">
+        <constructor-arg name="apiKey" value="${google.api.key}"/>
+        <constructor-arg name="appSecret" value="${google.api.secret}"/>
+    </bean>
+
+</beans>                

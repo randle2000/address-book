@@ -7,10 +7,12 @@
 		http://www.springframework.org/schema/security
 		http://www.springframework.org/schema/security/spring-security.xsd">
 	
+	<!-- Spring Social components in this file:	socialAuthenticationFilter and socialAuthenticationProvider -->
+	
     <!-- enable use-expressions -->
 	<http auto-config="true" use-expressions="true">
-		<intercept-url pattern="/contacts/**" access="hasRole('ROLE_USER')" />
-		<intercept-url pattern="/register/update/**" access="hasAnyRole('ROLE_ADMIN,ROLE_USER')" />
+		<intercept-url pattern="/contacts/**" access="hasAnyRole('ROLE_LOCALUSER,ROLE_SOCIALUSER')" />
+		<intercept-url pattern="/register/update/**" access="hasAnyRole('ROLE_LOCALUSER,ROLE_SOCIALUSER')" />
 		
 		<headers>
 			<cache-control />
@@ -38,25 +40,29 @@
 			password-parameter="pwd" 
 			login-processing-url="/auth/login_check"
 			authentication-success-handler-ref="savedRequestAwareAuthenticationSuccessHandler" />
-		<logout logout-success-url="/login?logout" delete-cookies="JSESSIONID" />
+		<logout logout-url="/j_spring_security_logout" logout-success-url="/login?logout" delete-cookies="JSESSIONID" />
 		
 		<!-- enable csrf protection -->
-		<csrf/> 
+		<!-- <csrf/> --> 
 		
 		<remember-me 
 			user-service-ref="userService"
 		    token-validity-seconds="1209600"
 			remember-me-parameter="remember-me" 
 			data-source-ref="dataSource" />
+
+        <!-- Adds social authentication filter to the Spring Security filter chain. -->
+        <custom-filter before="PRE_AUTH_FILTER" ref="socialAuthenticationFilter"/>
 	</http>
 
-	<!-- for remember me token -->
+	<!-- bean for remember me token -->
 	<beans:bean id="savedRequestAwareAuthenticationSuccessHandler" class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
 		<beans:property name="targetUrlParameter" value="targetUrl" />
 	</beans:bean>
 
 	<!-- my custom authentication provider (com.sln.abook.service.UserServiceImpl implements UserDetailsService) -->
-	<authentication-manager>
+	<authentication-manager alias="authenticationManager">
+        <authentication-provider ref="socialAuthenticationProvider"/>
 		<authentication-provider user-service-ref="userService" />
 	</authentication-manager>
 	<!-- following bean is remmed because it will be picked up by component-scan -->

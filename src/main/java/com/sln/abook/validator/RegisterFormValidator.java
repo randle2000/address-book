@@ -37,7 +37,7 @@ public class RegisterFormValidator implements Validator {
 
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "NotEmpty.registerForm.email");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "realName", "NotEmpty.registerForm.name");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty.registerrForm.password");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty.registerForm.password");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "confirmPassword","NotEmpty.registerForm.confirmPassword");
 
 		if(!emailValidator.valid(user.getEmail())){

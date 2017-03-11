@@ -16,4 +16,6 @@ public interface UserService {
 	
 	void delete(long id);
 	
+	boolean registerNewUser(String email, String realName, String password);
+	
 }

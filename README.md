@@ -1,54 +1,49 @@
-mvn archetype:generate -DgroupId=com.sln -DartifactId=address-book -DarchetypeGroupId=co.ntier -DarchetypeArtifactId=spring-mvc-archetype -DinteractiveMode=false
+# Address Book
 
-CREATE TABLE users (
-  UserID int(11) NOT NULL AUTO_INCREMENT,
-  Email varchar(50) NOT NULL,
-  Password varchar(50) NOT NULL,
-  Enabled tinyint(4) NOT NULL DEFAULT '1',
-  RealName varchar(50) DEFAULT NULL,
-  PRIMARY KEY (UserID),
-  UNIQUE KEY idx_Email (Email)
-) ENGINE=InnoDB;
++ Rename profiles/dev/*.properties-dummy to *.properties
++ Edit database.properties and socialProviders.properties
++ Crate DB (address_book) and create tables using src/main/resources/tables.sql
+	+ tables `users` and `contacts` are used by this app
+	+ table `persistent_logins` is used by <remember-me /> in WEB-INF/config/security.xml  
+	+ table `UserConnection` is used by JdbcUsersConnectionRepository in WEB-INF/config/social.xml to associate your local users with social users
 
-CREATE TABLE persistent_logins (
-    username varchar(64) not null,
-    series varchar(64) not null,
-    token varchar(64) not null,
-    last_used timestamp not null,
-    PRIMARY KEY (series)
-);
-
-CREATE TABLE contacts (
-  ContactID int NOT NULL AUTO_INCREMENT,
-  UserID int NOT NULL,
-  Name VARCHAR(30),
-  Email varchar(50) NOT NULL,
-  Address VARCHAR(255),
-  Favorite BOOLEAN,
-  Groups VARCHAR(500),
-  Gender VARCHAR(1),
-  Priority INTEGER,
-  Country VARCHAR(10),
-  Personality VARCHAR(500),
-  PRIMARY KEY (ContactID),
-  UNIQUE KEY idx_Email (Email),
-  KEY UserID (UserID),
-  CONSTRAINT contacts_ibfk_1 FOREIGN KEY (UserID) REFERENCES users (UserID) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
++ To compile:
+	`mvn clean package`
++ To run locally:
+	On Windows:	`java -cp "target/dependency/*" webapp.runner.launch.Main target/*.war --enable-naming`
+	On Linux: 	`java -cp 'target/dependency/*' webapp.runner.launch.Main target/*.war --enable-naming`
++ To deploy:
+	`mvn clean heroku:deploy`
 
 
+### Notes 
+Also see Spring Social notes in My Java notes
 
-The URI structure :
+contacts/index.jsp uses post() from my.js to post
 
-URI					Method	Action
-/contacts				GET		Listing, display all contacts
-/contacts				POST	Save or update contact
-/contacts/{id}			GET		Display contact {id}
-/contacts/add			GET		Display add contact form
-/contacts/{id}/update	GET		Display update contact form for {id}
-/contacts/{id}/delete	POST	Delete contact {id}
+This app was initially created using
+
+	mvn archetype:generate -DgroupId=com.sln -DartifactId=address-book -DarchetypeGroupId=co.ntier -DarchetypeArtifactId=spring-mvc-archetype -DinteractiveMode=false
 
 
+### The URI structure :
+
+|URI					|Method	|Action
+|-----------------------|-------|--------------
+|/contacts				|GET	|Listing, display all contacts
+|/contacts				|POST	|Save or update contact
+|/contacts/{id}			|GET	|Display contact {id}
+|/contacts/add			|GET	|Display add contact form
+|/contacts/{id}/update	|GET	|Display update contact form for {id}
+|/contacts/{id}/delete	|POST	|Delete contact {id}
+
+### OAuth2 with social networks:
+	http://sunilkumarpblog.blogspot.in/2016/04/social-login-with-spring-security.html
+	http://callistaenterprise.se/blogg/teknik/2014/09/02/adding-social-login-to-a-website-using-spring-social/
+	https://www.petrikainulainen.net/spring-social-tutorial/
+	https://spring.io/guides/tutorials/spring-boot-oauth2/
+
+### Images and file uploads (not used here)
 For file upload see: http://www.journaldev.com/2573/spring-mvc-file-upload-example-single-multiple-files
 	In contactform.jsp:
 		<form.....  enctype="multipart/form-data">
@@ -58,11 +53,4 @@ For file upload see: http://www.journaldev.com/2573/spring-mvc-file-upload-examp
     In Contact class: private MultipartFile imageUpload;
     Resizing images: http://www.codejava.net/java-se/graphics/how-to-resize-images-in-java  
 	
-contacts/index.jsp uses post() from my.js to post 
 
-OAuth2 with social networks:
-	http://callistaenterprise.se/blogg/teknik/2014/09/02/adding-social-login-to-a-website-using-spring-social/
-	https://www.petrikainulainen.net/spring-social-tutorial/
-	https://spring.io/guides/tutorials/spring-boot-oauth2/
-
-mvn clean heroku:deploy

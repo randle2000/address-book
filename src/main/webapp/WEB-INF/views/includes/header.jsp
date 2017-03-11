@@ -1,5 +1,5 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,6 +11,12 @@
   <link href="${bootstrapCss}" rel="stylesheet" />
   <script src="${bootstrapJs}"></script>
    -->
+  <!-- The following 2 CSSs are used by social buttons -->
+  <spring:url value="/resources/css/bootstrap-social.css" var="bootstrapsocialCss" />
+  <spring:url value="/resources/css/font-awesome.css" var="fontawesomeCss" />
+  <link href="${bootstrapsocialCss}" rel="stylesheet" />
+  <link href="${fontawesomeCss}" rel="stylesheet" />
+   
   <spring:url value="/resources/js/my.js" var="myJs" />
   <script src="${myJs}"></script>
    
@@ -55,7 +61,7 @@
           <li class="${activeLogin ? 'active' : ''}"><a href="${urlLogin}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
         </c:when>
         <c:otherwise>
-          <a class="navbar-brand" ><span class="glyphicon glyphicon-ok-sign"></span> ${pageContext.request.userPrincipal.name}</a>
+          <a class="navbar-brand" ><span class="glyphicon glyphicon-ok-sign"></span> <%= ((com.sln.abook.service.MyUser)(org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getUser().getRealName() %> </a>
           <li class="${activeRegisterUpdate ? 'active' : ''}"><a href="${urlRegisterUpdate}"><span class="glyphicon glyphicon-user"></span> Update info</a></li>
           <li class="${activeLogout ? 'active' : ''}"><a href="javascript:formSubmit()"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
         </c:otherwise>

@@ -29,7 +29,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sln.abook.model.User;
-import com.sln.abook.service.MyUserDetails;
+import com.sln.abook.service.MyUser;
+import com.sln.abook.service.MyLocalUser;
 import com.sln.abook.service.UserService;
 import com.sln.abook.validator.RegisterFormValidator;
 
@@ -60,8 +61,8 @@ public class MainController {
 	 * Returns com.sln.model.User object of current authenticated user
 	 */
 	private User currentAuthenticatedUser() {
-		MyUserDetails myUserDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return myUserDetails.getUser();
+		MyUser myUser = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return myUser.getUser();
 	}
 	
 	/**
@@ -80,7 +81,8 @@ public class MainController {
 	 */
 	private void doManualLogin(User user) {
 		//Authentication auth = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword(), Arrays.<GrantedAuthority>asList(new SimpleGrantedAuthority("ROLE_USER")));
-		UserDetails userDetails = new MyUserDetails(user, true, true, true, AuthorityUtils.createAuthorityList("ROLE_USER"));
+		UserDetails userDetails = new MyLocalUser(user, true, true, true, AuthorityUtils.createAuthorityList("ROLE_LOCALUSER"));
+		// the following will work even if you pass null instead of userDetails.getPassword()
 		Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(auth);
 	}
@@ -128,12 +130,13 @@ public class MainController {
 	@RequestMapping(value = { "/", "/welcome**" }, method = RequestMethod.GET)
 	public ModelAndView defaultPage() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("activeHome", true);
+		model.addObject("activeHome", true);	// this is will set [Home] button in a top menu in header.jsp to active
 		model.setViewName("index");
 		return model;
 	}
 
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	// I don't user /signin** URI in my project but some social sites redirect to this URI when user presses Cancel during authentication
+	@RequestMapping(value = {"/login", "/signin**"}, method = RequestMethod.GET)
 	public ModelAndView login(@RequestParam(value = "error", required = false) String error,
 			@RequestParam(value = "logout", required = false) String logout, HttpServletRequest request) {
 
@@ -157,7 +160,7 @@ public class MainController {
 			// aready logged in and clicked on Login: redirect to contacts
 			model.setViewName("redirect:contacts");
 		} else {
-			model.addObject("activeLogin", true);
+			model.addObject("activeLogin", true);	// this is will set [Login] button in a top menu in header.jsp to active
 			model.setViewName("login");
 		}
 
@@ -176,7 +179,7 @@ public class MainController {
 		} else {
 			User user = new User();
 			model.addAttribute("registerForm", user);
-			model.addAttribute("activeRegister", true);
+			model.addAttribute("activeRegister", true);	// this is will set [Register] button in a top menu in header.jsp to active
 			return "register";
 		}
 	}
@@ -189,7 +192,11 @@ public class MainController {
 		logger.debug("registerOrUpdateUser() : {}", user);
 
 		if (result.hasErrors()) {
-			model.addAttribute("activeRegister", true);
+			if (user.isNew()) {
+				model.addAttribute("activeRegister", true);	// this is will set [Register] button in a top menu in header.jsp to active
+			} else {
+				model.addAttribute("activeRegisterUpdate", true);	// this is will set [Update] button in a top menu in header.jsp to active
+			}
 			return "register";
 		}
 		
@@ -198,7 +205,7 @@ public class MainController {
 			User existingUser = userService.findByEmail(user.getEmail());
 			if (existingUser != null) {
 				model.addAttribute("error", "This email is already registered!");
-				model.addAttribute("activeRegister", true);
+				model.addAttribute("activeRegister", true);	// this is will set [Register] button in a top menu in header.jsp to active
 				return "register";
 			}
 		}
@@ -230,7 +237,7 @@ public class MainController {
 	public ModelAndView updatePage(HttpServletRequest request) {
 
 		ModelAndView model = new ModelAndView();
-
+		
 		if (isRememberMeAuthenticated()) {
 			//send login for update
 			setRememberMeTargetUrlToSession(request);
@@ -238,9 +245,8 @@ public class MainController {
 			model.setViewName("/login");
 		} else {
 			User user = currentAuthenticatedUser();
-			//User user = userService.findByEmail(principal.getName()); 
 			model.addObject("registerForm", user);
-			model.addObject("activeRegisterUpdate", true);
+			model.addObject("activeRegisterUpdate", true);	// this is will set [Update] button in a top menu in header.jsp to active
 			model.setViewName("register");
 		}
 
