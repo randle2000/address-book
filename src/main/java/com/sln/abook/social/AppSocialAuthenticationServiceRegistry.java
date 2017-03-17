@@ -18,7 +18,7 @@ public class AppSocialAuthenticationServiceRegistry extends SocialAuthentication
     @PostConstruct
     public void init() {
         if (authenticationServices != null) {
-            for (SocialAuthenticationService authenticationService : authenticationServices) {
+            for (SocialAuthenticationService<?> authenticationService : authenticationServices) {
                 super.addAuthenticationService(authenticationService);
             }
         }

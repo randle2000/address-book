@@ -1,8 +1,7 @@
 package com.sln.abook.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.sln.abook.dao.ContactDao;
@@ -15,33 +14,29 @@ public class ContactServiceImpl implements ContactService {
 	private ContactDao contactDao;
 
 	@Autowired
+	//@Qualifier("contactRepositoryJdbc")
+	@Qualifier("contactRepositoryHibernate")
 	public void setContactDao(ContactDao contactDao) {
 		this.contactDao = contactDao;
 	}
-
+	
+	// this method should always receive new contact object
 	@Override
-	public Contact findById(long id) {
-		return contactDao.findById(id);
-	}
-
-	@Override
-	public List<Contact> findByUser(User user) {
-		return contactDao.findByUser(user);
-	}
-
-	@Override
-	public void saveOrUpdate(Contact contact) throws Exception {
+	public void saveOrUpdate(Contact contact, User user) throws Exception {
 		if (contact.isNew()) {
+			user.addNewContact(contact);
 			contactDao.save(contact);
 		} else {
-			if (findById(contact.getContactId())==null)
-				throw new Exception("Trying to update contact but it doesn't exist in a database");
+			//if (findById(contact.getContactId())==null)
+			//	throw new Exception("Trying to update contact but it doesn't exist in a database");
+			user.updateContact(contact);
 			contactDao.update(contact);
 		}
 	}
 
 	@Override
-	public void delete(long id) {
+	public void delete(Long id, User user) {
+		user.deleteContactById(id);
 		contactDao.delete(id);
 	}
 

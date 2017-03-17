@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,6 +39,8 @@ public class UserServiceImpl implements UserService, UserDetailsService, SocialU
 	private UserDao userDao;
 
 	@Autowired
+	//@Qualifier("userRepositoryJdbc")
+	@Qualifier("userRepositoryHibernate")
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
 	}

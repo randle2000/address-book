@@ -37,6 +37,27 @@ This app was initially created using
 |/contacts/{id}/update	|GET	|Display update contact form for {id}
 |/contacts/{id}/delete	|POST	|Delete contact {id}
 
+### Switching from JDBC to Hibernate via JPA
+Here Hibernate implementation is used over JPA api
+To do this I did the following:
++ added artifacts to pom.xml: spring-orm, hibernate-entitymanager
++ added WEB-INF/config/data-jpa.xml (and its import in root-context.xml)
++ added src/main/resources/META-INF/persistence.xml (punit defined there (can be any name) is referenced by data-jpa.xml)
++ added SpringOpenEntityManagerInViewFilter to web.xml
++ added `com.sln.abook.dao.UserDaoHibernateImpl` and `com.sln.abook.dao.ContactDaoHibernateImpl`
++ added annotations to `com.sln.abook.model.User` and `com.sln.abook.model.Contact`
++ added Hibernate properties to /profiles/dev/database.properties and /src/main/resources/application.properties
+
+To switch between JDBC and Hibernate:
+In `com.sln.abook.service.UserService` and `com.sln.abook.service.ContactService` inject the corresponding implementation. Like:
+
+	@Autowired
+	//@Qualifier("userRepositoryJdbc")
+	@Qualifier("userRepositoryHibernate")
+	private UserDao userDao;
+
+Annotations in `com.sln.abook.model.User` and `com.sln.abook.model.Contact` will be ignored if using "userRepositoryJdbc"
+
 ### OAuth2 with social networks:
 	http://sunilkumarpblog.blogspot.in/2016/04/social-login-with-spring-security.html
 	http://callistaenterprise.se/blogg/teknik/2014/09/02/adding-social-login-to-a-website-using-spring-social/

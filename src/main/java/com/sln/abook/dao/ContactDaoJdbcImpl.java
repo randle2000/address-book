@@ -23,8 +23,8 @@ import org.springframework.util.StringUtils;
 import com.sln.abook.model.Contact;
 import com.sln.abook.model.User;
 
-@Repository
-public class ContactDaoImpl implements ContactDao {
+@Repository("contactRepositoryJdbc")
+public class ContactDaoJdbcImpl implements ContactDao {
 
 	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -53,7 +53,7 @@ public class ContactDaoImpl implements ContactDao {
 	private SqlParameterSource getSqlParameterByModel(Contact contact) {
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("id", contact.getContactId());
-		paramSource.addValue("userid", contact.getUserId());
+		paramSource.addValue("userid", contact.getUser().getUserId());
 		paramSource.addValue("name", contact.getName());
 		paramSource.addValue("email", contact.getEmail());
 		paramSource.addValue("address", contact.getAddress());
@@ -72,7 +72,7 @@ public class ContactDaoImpl implements ContactDao {
 		public Contact mapRow(ResultSet rs, int rowNum) throws SQLException {
 			Contact contact = new Contact();
 			contact.setContactId(rs.getLong("ContactID"));
-			contact.setUserId(rs.getLong("UserID"));
+			//contact.setUserId(rs.getLong("UserID"));
 			contact.setName(rs.getString("Name"));
 			contact.setEmail(rs.getString("Email"));
 			contact.setAddress(rs.getString("Address"));
@@ -86,7 +86,7 @@ public class ContactDaoImpl implements ContactDao {
 		}
 	}
 	
-	@Override
+	//@Override
 	public Contact findById(long id) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("id", id);
@@ -109,8 +109,8 @@ public class ContactDaoImpl implements ContactDao {
 		params.put("userid", user.getUserId());
 		
 		String sql = "SELECT * FROM contacts WHERE UserID=:userid";
-		List<Contact> result = namedParameterJdbcTemplate.query(sql, params, new ContactMapper());
-		return result;
+		List<Contact> contacts = namedParameterJdbcTemplate.query(sql, params, new ContactMapper());
+		return contacts;
 	}
 
 	@Override
@@ -134,7 +134,7 @@ public class ContactDaoImpl implements ContactDao {
 	}
 
 	@Override
-	public void delete(long id) {
+	public void delete(Long id) {
 		String sql = "DELETE FROM contacts WHERE ContactID= :id";
 		namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
 	}

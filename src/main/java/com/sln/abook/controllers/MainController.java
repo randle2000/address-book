@@ -126,7 +126,7 @@ public class MainController {
 	
 	
 	// ***** Mappings *****
-
+	
 	@RequestMapping(value = { "/", "/welcome**" }, method = RequestMethod.GET)
 	public ModelAndView defaultPage() {
 		ModelAndView model = new ModelAndView();

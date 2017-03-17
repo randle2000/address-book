@@ -109,7 +109,7 @@ public class ContactsController {
 		logger.debug("showAllContacts()");
 
 		User user = currentAuthenticatedUser();
-		model.addAttribute("contacts", contactService.findByUser(user));
+		model.addAttribute("contacts", user.getContacts());
 		return "contacts/index";
 	}
 	
@@ -124,9 +124,6 @@ public class ContactsController {
 
 		logger.debug("saveOrUpdateContact() : {}", contact);
 		
-		// contact.userId must be set
-		contact.setUserId(currentAuthenticatedUser().getUserId());
-		
 		if (result.hasErrors()) {
 			populateDefaultModel(model);
 			return "contacts/contactform";
@@ -140,7 +137,8 @@ public class ContactsController {
 		  redirectAttributes.addFlashAttribute("msg", "Contact updated successfully!");
 		}
 
-		contactService.saveOrUpdate(contact);
+		User user = currentAuthenticatedUser();
+		contactService.saveOrUpdate(contact, user);
 
 		// POST/REDIRECT/GET
 		return "redirect:/contacts/" + contact.getContactId();
@@ -165,7 +163,8 @@ public class ContactsController {
 	public String showUpdateContactForm(@PathVariable("id") int id, Model model) {
 		logger.debug("showUpdateContactForm() : {}", id);
 
-		Contact contact = contactService.findById(id);
+		User user = currentAuthenticatedUser();
+		Contact contact = user.findContactById(Long.valueOf(id));
 		model.addAttribute("contactForm", contact);
 		populateDefaultModel(model);
 		return "contacts/contactform";
@@ -177,7 +176,8 @@ public class ContactsController {
 	public String deleteContact(@PathVariable("id") int id, final RedirectAttributes redirectAttributes) {
 		logger.debug("deleteContact() : {}", id);
 
-		contactService.delete(id);
+		User user = currentAuthenticatedUser();
+		contactService.delete(Long.valueOf(id), user);
 		redirectAttributes.addFlashAttribute("css", "success");
 		redirectAttributes.addFlashAttribute("msg", "Contact is deleted!");
 		return "redirect:/contacts";
@@ -188,7 +188,8 @@ public class ContactsController {
 	public String showContact(@PathVariable("id") int id, Model model) {
 		logger.debug("showContact() id: {}", id);
 
-		Contact contact = contactService.findById(id);
+		User user = currentAuthenticatedUser();
+		Contact contact = user.findContactById(Long.valueOf(id));
 		if (contact == null) {
 			model.addAttribute("css", "danger");
 			model.addAttribute("msg", "Contact not found");

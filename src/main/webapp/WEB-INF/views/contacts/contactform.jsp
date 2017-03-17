@@ -24,8 +24,6 @@
 
 		<form:hidden path="contactId" />
 		
-		<form:hidden path="userId" />
-
 		<spring:bind path="name">
 			<div class="form-group ${status.error ? 'has-error' : ''}">
 				<label class="col-sm-2 control-label">Name</label>

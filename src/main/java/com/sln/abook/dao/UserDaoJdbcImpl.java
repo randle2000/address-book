@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -18,17 +18,23 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 //import org.springframework.util.StringUtils;
 
+import com.sln.abook.model.Contact;
 import com.sln.abook.model.User;
 
-@Repository
-public class UserDaoImpl implements UserDao {
-
-	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+/**
+ * 
+ * All load methods load contacts for each user
+ * But save methods do not save contacts for each user
+ */
+@Repository("userRepositoryJdbc")
+public class UserDaoJdbcImpl implements UserDao {
 
 	@Autowired
-	public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) throws DataAccessException {
-		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-	}
+	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	
+	@Autowired
+	@Qualifier("contactRepositoryJdbc")
+	ContactDao contactDao;
 	
 	private SqlParameterSource getSqlParameterByModel(User user) {
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
@@ -51,6 +57,11 @@ public class UserDaoImpl implements UserDao {
 			return user;
 		}
 	}
+	
+	private void loadContacts(User user) {
+		List<Contact> contacts = contactDao.findByUser(user);
+		user.setContacts(contacts);
+	}
 
 	@Override
 	public User findById(long id) {
@@ -60,14 +71,15 @@ public class UserDaoImpl implements UserDao {
 
 		String sql = "SELECT * FROM users WHERE UserID=:id";
 
-		User result = null;
+		User user = null;
 		try {
-			result = namedParameterJdbcTemplate.queryForObject(sql, params, new UserMapper());
+			user = namedParameterJdbcTemplate.queryForObject(sql, params, new UserMapper());
+			loadContacts(user);
 		} catch (EmptyResultDataAccessException e) {
 			// do nothing, return null
 		}
 
-		return result;
+		return user;
 	}
 	
 	@Override
@@ -77,21 +89,25 @@ public class UserDaoImpl implements UserDao {
 	
 		String sql = "SELECT * FROM users WHERE Email=:email";
 	
-		User result = null;
+		User user = null;
 		try {
-			result = namedParameterJdbcTemplate.queryForObject(sql, params, new UserMapper());
+			user = namedParameterJdbcTemplate.queryForObject(sql, params, new UserMapper());
+			loadContacts(user);
 		} catch (EmptyResultDataAccessException e) {
 			// do nothing, return null
 		}
 	
-		return result;
+		return user;
 	}
 
 	@Override
 	public List<User> findAll() {
 		String sql = "SELECT * FROM users";
-		List<User> result = namedParameterJdbcTemplate.query(sql, new UserMapper());
-		return result;
+		List<User> users = namedParameterJdbcTemplate.query(sql, new UserMapper());
+		for (User user : users) {
+			loadContacts(user);
+		}
+		return users;
 	}
 
 	@Override

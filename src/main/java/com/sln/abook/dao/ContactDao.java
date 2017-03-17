@@ -7,7 +7,7 @@ import com.sln.abook.model.User;
 
 public interface ContactDao {
 	
-	Contact findById(long id);
+	//Contact findById(long id, User user);
 	
 	List<Contact> findByUser(User user);
 
@@ -15,6 +15,6 @@ public interface ContactDao {
 
 	void update(Contact contact);
 	
-	void delete(long id);
+	void delete(Long id);
 	
 }
