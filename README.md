@@ -37,6 +37,7 @@ This app was initially created using
 |/contacts/{id}/update	|GET	|Display update contact form for {id}
 |/contacts/{id}/delete	|POST	|Delete contact {id}
 
+
 ### Switching from JDBC to Hibernate via JPA
 Here Hibernate implementation is used over JPA api
 To do this I did the following:
@@ -58,14 +59,17 @@ In `com.sln.abook.service.UserService` and `com.sln.abook.service.ContactService
 
 Annotations in `com.sln.abook.model.User` and `com.sln.abook.model.Contact` will be ignored if using "userRepositoryJdbc"
 
+
 ### OAuth2 with social networks:
 	http://sunilkumarpblog.blogspot.in/2016/04/social-login-with-spring-security.html
 	http://callistaenterprise.se/blogg/teknik/2014/09/02/adding-social-login-to-a-website-using-spring-social/
 	https://www.petrikainulainen.net/spring-social-tutorial/
 	https://spring.io/guides/tutorials/spring-boot-oauth2/
 
+	
 ### Images and file uploads (not used here)
 For file upload see: http://www.journaldev.com/2573/spring-mvc-file-upload-example-single-multiple-files
+
 	In contactform.jsp:
 		<form.....  enctype="multipart/form-data">
 		<label for="imageUpload">Upload</label>
