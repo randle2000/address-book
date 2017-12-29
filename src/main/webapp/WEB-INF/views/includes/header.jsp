@@ -61,6 +61,7 @@
           <li class="${activeLogin ? 'active' : ''}"><a href="${urlLogin}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
         </c:when>
         <c:otherwise>
+		  <!-- Alternatively, you can use Spring Security tags here, see 9.5.1 in "Spring in Action 4th Edition" book --> 
           <a class="navbar-brand" ><span class="glyphicon glyphicon-ok-sign"></span> <%= ((com.sln.abook.service.MyUser)(org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getUser().getRealName() %> </a>
           <li class="${activeRegisterUpdate ? 'active' : ''}"><a href="${urlRegisterUpdate}"><span class="glyphicon glyphicon-user"></span> Update info</a></li>
           <li class="${activeLogout ? 'active' : ''}"><a href="javascript:formSubmit()"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
