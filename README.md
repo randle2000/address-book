@@ -65,6 +65,10 @@ Annotations in `com.sln.abook.model.User` and `com.sln.abook.model.Contact` will
 	http://callistaenterprise.se/blogg/teknik/2014/09/02/adding-social-login-to-a-website-using-spring-social/
 	https://www.petrikainulainen.net/spring-social-tutorial/
 	https://spring.io/guides/tutorials/spring-boot-oauth2/
+	- Facebook  
+		https://spring.io/guides/gs/register-facebook-app/
+		http://www.baeldung.com/facebook-authentication-with-spring-security-and-social
+		https://www.nextscripts.com/instructions/facebook-social-networks-auto-poster-setup-installation/october-2017-facebook-changes/
 
 	
 ### Images and file uploads (not used here)
