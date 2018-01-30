@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionSignUp;
-//import org.springframework.social.connect.UserProfile;
+import org.springframework.social.connect.UserProfile;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.User;
 
@@ -31,17 +31,25 @@ public class AppConnectionSignUp implements ConnectionSignUp {
     //		https://github.com/sunilpulugula/SpringSecuritySocialLoginExample/blob/master/src/main/java/com/spring/security/social/login/example/exception/UserAlreadyExistAuthenticationException.java
     @Override
     public String execute(final Connection<?> connection) {
-    	//UserProfile userProfile = connection.fetchUserProfile();
+        String email;
+        String realName;
+    	String providerId = connection.getKey().getProviderId();
+        String userId = connection.getKey().getProviderUserId();
+    	
     	// fetchUserProfile() now produces exception "(#12) bio field is deprecated for versions v2.8 and higher"
     	// below is a workaround, see: https://stackoverflow.com/questions/39890885/error-message-is-12-bio-field-is-deprecated-for-versions-v2-8-and-higher
-    	Facebook facebook = (Facebook)connection.getApi();
-    	String [] fields = { "id", "email",  "first_name", "last_name" };
-    	User userProfile = facebook.fetchObject("me", User.class, fields);
-    	
-        String userId = connection.getKey().getProviderUserId();
-        String providerId = connection.getKey().getProviderId();
-        String email = userProfile.getEmail();
-        String realName = userProfile.getName();
+    	if (providerId.equals("facebook")) {
+        	Facebook facebook = (Facebook)connection.getApi();
+        	String [] fields = { "id", "email",  "first_name", "last_name" };
+        	User user = facebook.fetchObject("me", User.class, fields);
+            email = user.getEmail();
+            realName = user.getFirstName() + " " + user.getLastName();
+
+    	} else {
+        	UserProfile userProfile = connection.fetchUserProfile();
+            email = userProfile.getEmail();
+            realName = userProfile.getName();
+    	}
         
         logger.debug("--------- AppConnectionSignUp.execute(): {}", userId);
         
