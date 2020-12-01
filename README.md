@@ -2,7 +2,7 @@
 
 + Rename profiles/dev/*.properties-dummy to *.properties
 + Edit database.properties and socialProviders.properties
-+ Crate DB (address_book) and create tables using src/main/resources/tables.sql
++ Crate DB (address_book) and create tables using `src/main/resources/tables.sql` OR run with `docker-compose up -d` which will use `tables.sql` to create tables 
 	+ tables `users` and `contacts` are used by this app
 	+ table `persistent_logins` is used by `<remember-me />` in WEB-INF/config/security.xml  
 	+ table `UserConnection` is used by JdbcUsersConnectionRepository in WEB-INF/config/social.xml to associate your local users with social users

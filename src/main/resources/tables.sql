@@ -1,3 +1,9 @@
+GRANT ALL ON *.* to root@'%' IDENTIFIED BY 'sesame';
+FLUSH PRIVILEGES;
+
+CREATE DATABASE IF NOT EXISTS address_book;
+USE address_book;
+
 CREATE TABLE users (
   UserID int(11) NOT NULL AUTO_INCREMENT,
   Email varchar(50) NOT NULL,
